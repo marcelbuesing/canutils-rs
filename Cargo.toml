@@ -1,0 +1,12 @@
+[package]
+name = "candumprb"
+version = "0.1.0"
+authors = ["marcelbuesing <buesing.marcel@googlemail.com>"]
+edition = "2018"
+
+[dependencies]
+ansi_term = "0.11"
+futures = "0.1"
+structopt = "0.2"
+tokio = "0.1"
+tokio-socketcan = "0.1"
