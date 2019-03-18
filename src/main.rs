@@ -1,6 +1,9 @@
 
+use std::collections::HashMap;
 use ansi_term::Color;
 use ansi_term::Color::Fixed;
+
+use can_dbc::DBC;
 
 use futures::stream::Stream;
 use futures::future::{self, Future};
@@ -8,6 +11,7 @@ use futures::future::{self, Future};
 use std::fmt::Write;
 use std::io::{self};
 use std::path::PathBuf;
+use std::fs::File;
 
 use structopt::StructOpt;
 
@@ -86,11 +90,16 @@ impl Byte {
 struct Opt {
     /// DBC Input file
     #[structopt(short = "f", long = "dbc-file", parse(from_os_str))]
-    dbc_file: Option<PathBuf>,
+    dbc_path: Option<PathBuf>,
 
     /// Set can interface
     #[structopt(help = "socketcan CAN interface e.g. vcan0")]
     can_interface: String,
+}
+
+struct DBCLookup {
+    message_by_message_id: HashMap<u16, can_dbc::Message>,
+    signals_by_signal_id: HashMap<u16, can_dbc::Signal>,
 }
 
 fn main() -> io::Result<()> {
@@ -105,6 +114,20 @@ fn main() -> io::Result<()> {
             Byte(i).color().paint(byte_hex).to_string()
         })
     .collect();
+
+    let dbc = if let Some(dbc_path) = opt.dbc_path {
+        let mut buffer = Vec::new();
+        let mut f = File::open(dbc_path).expect("Failed to open dbc file");
+        f.read_to_end(&mut buffer).expect("Failed to read dbc file");
+
+        let dbc = DBC::from_slice(&buffer).expect("Failed to parse dbc file content");
+
+        Ok(DBCLookup {
+            message_by_message_id: dbc.messages.iter().
+        })
+    } else {
+        None
+    };
 
     tokio::run(socket_rx.for_each(move |frame| {
         let mut buffer: String = String::new();
