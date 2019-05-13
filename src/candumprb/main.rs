@@ -1,18 +1,15 @@
+#![feature(async_await)]
 
 use ansi_term::Color;
 use ansi_term::Color::Fixed;
 
-use futures::stream::Stream;
-use futures::future::{self, Future};
+use futures::prelude::*;
+use futures_util::compat::Stream01CompatExt;
 
 use std::fmt::Write;
-use std::io::{self};
 use std::path::PathBuf;
 
 use structopt::StructOpt;
-
-use tokio::prelude::*;
-use tokio::io::stdout;
 use tokio_socketcan;
 
 const COLOR_CAN_ID: Color = Color::White;
@@ -93,11 +90,12 @@ struct Opt {
     can_interface: String,
 }
 
-fn main() -> io::Result<()> {
+#[runtime::main]
+async fn main() -> std::io::Result<()> {
 
     let opt = Opt::from_args();
 
-    let socket_rx = tokio_socketcan::CANSocket::open(&opt.can_interface).unwrap();
+    let mut socket_rx = tokio_socketcan::CANSocket::open(&opt.can_interface).unwrap().compat();
 
     let byte_hex_table: Vec<String> = (0u8..=u8::max_value())
         .map(|i| {
@@ -106,25 +104,30 @@ fn main() -> io::Result<()> {
         })
     .collect();
 
-    tokio::run(socket_rx.for_each(move |frame| {
-        let mut buffer: String = String::new();
+    while let Some(socket_result) = socket_rx.next().await {
+        match socket_result {
+            Ok(frame) => {
+                let mut buffer: String = String::new();
 
-        if frame.is_extended() {
-            write!(buffer, "{}", COLOR_CAN_EFF.paint("EFF ")).unwrap();
-        } else {
-            write!(buffer, "{}", COLOR_CAN_SFF.paint("SFF ")).unwrap();
+                if frame.is_extended() {
+                    write!(buffer, "{}", COLOR_CAN_EFF.paint("EFF ")).unwrap();
+                } else {
+                    write!(buffer, "{}", COLOR_CAN_SFF.paint("SFF ")).unwrap();
+                }
+
+                write!(buffer, "{}", COLOR_CAN_ID.paint(format!("{:08x} ", frame.id()))).unwrap();
+
+                for b in frame.data() {
+                    write!(buffer, "{}", byte_hex_table[*b as usize]).unwrap();
+                }
+
+                println!("{}", buffer);
+            },
+            Err(err) => {
+                eprintln!("IO error: {}", err);
+            }
         }
-
-        write!(buffer, "{}\t", COLOR_CAN_ID.paint(format!("{:X}", frame.id()))).unwrap();
-
-        for b in frame.data() {
-            write!(buffer, "{}", byte_hex_table[*b as usize]).unwrap();
-        }
-
-        println!("{}", buffer);
-
-        Ok(())
-    }).map_err(|_err| {}));
+    }
 
     Ok(())
 }
