@@ -1,8 +1,15 @@
 [package]
 name = "canutils"
 version = "0.1.0"
+license = "MIT"
+description = "A can-utils implementation in pure Rust"
 authors = ["marcelbuesing <buesing.marcel@googlemail.com>"]
 edition = "2018"
+homepage = "https://github.com/marcelbuesing/canutils-rs"
+repository = "https://github.com/marcelbuesing/canutils-rs.git"
+keywords = ["can-utils", "can", "automotive", "ecu"]
+documentation = "https://docs.rs/canutils"
+readme = "README.md"
 
 [dependencies]
 ansi_term = "0.11"
