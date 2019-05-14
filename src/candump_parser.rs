@@ -21,8 +21,8 @@ mod tests {
 
 #[derive(Debug, PartialEq)]
 pub struct Timestamp {
-    seconds: u64,
-    nanos: u64,
+    pub seconds: u64,
+    pub nanos: u64,
 }
 
 named!(timestamp<&str, Timestamp>,
@@ -38,8 +38,8 @@ named!(timestamp<&str, Timestamp>,
 
 #[derive(Debug, PartialEq)]
 pub struct CanFrame {
-    frame_id: u32,
-    frame_body: u64,
+    pub frame_id: u32,
+    pub frame_body: u64,
 }
 
 named!(can_frame<&str, CanFrame>,
@@ -56,7 +56,20 @@ pub struct DumpEntry {
     timestamp: Timestamp,
     can_interface: String,
     can_frame: CanFrame,
+}
 
+impl DumpEntry {
+    pub fn timestamp(&self) -> &Timestamp {
+        &self.timestamp
+    }
+
+    pub fn can_interface(&self) -> &str {
+        &self.can_interface
+    }
+
+    pub fn can_frame(&self) -> &CanFrame {
+        &self.can_frame
+    }
 }
 
 named!(pub dump_entry<&str, DumpEntry>,
