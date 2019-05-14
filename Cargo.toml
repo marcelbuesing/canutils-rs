@@ -1,6 +1,6 @@
 [package]
 name = "canutils"
-version = "0.1.1"
+version = "0.1.2"
 license = "MIT"
 description = "A can-utils implementation in pure Rust"
 authors = ["marcelbuesing <buesing.marcel@googlemail.com>"]

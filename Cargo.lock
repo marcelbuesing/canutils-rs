@@ -72,7 +72,7 @@ dependencies = [
 
 [[package]]
 name = "canutils"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "ansi_term 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "futures-preview 0.3.0-alpha.16 (registry+https://github.com/rust-lang/crates.io-index)",
