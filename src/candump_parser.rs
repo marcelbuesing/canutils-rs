@@ -20,6 +20,7 @@ mod tests {
 }
 
 #[derive(Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Timestamp {
     pub seconds: u64,
     pub nanos: u64,
@@ -37,6 +38,7 @@ named!(timestamp<&str, Timestamp>,
 );
 
 #[derive(Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct CanFrame {
     pub frame_id: u32,
     pub frame_body: u64,
@@ -52,6 +54,7 @@ named!(can_frame<&str, CanFrame>,
 );
 
 #[derive(Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct DumpEntry {
     timestamp: Timestamp,
     can_interface: String,
