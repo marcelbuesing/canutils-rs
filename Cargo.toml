@@ -40,6 +40,9 @@ name = "candumprb"
 [[example]]
 name = "cangenrb"
 
+[[example]]
+name = "canstatsrb"
+
 [profile.release]
 opt-level = 3
 debug = false
