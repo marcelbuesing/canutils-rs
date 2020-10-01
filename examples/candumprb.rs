@@ -1,5 +1,3 @@
-#![feature(async_await)]
-
 use ansi_term::Color;
 use ansi_term::Color::Fixed;
 
@@ -79,7 +77,10 @@ impl Byte {
 }
 
 #[derive(Debug, StructOpt)]
-#[structopt(name = "candumprb", about = "Candump Rainbow. A colorful can dump tool with dbc support.")]
+#[structopt(
+    name = "candumprb",
+    about = "Candump Rainbow. A colorful can dump tool with dbc support."
+)]
 struct Opt {
     /// DBC Input file
     #[structopt(short = "f", long = "dbc-file", parse(from_os_str))]
@@ -90,19 +91,20 @@ struct Opt {
     can_interface: String,
 }
 
-#[runtime::main]
+#[tokio::main]
 async fn main() -> std::io::Result<()> {
-
     let opt = Opt::from_args();
 
-    let mut socket_rx = tokio_socketcan::CANSocket::open(&opt.can_interface).unwrap().compat();
+    let mut socket_rx = tokio_socketcan::CANSocket::open(&opt.can_interface)
+        .unwrap()
+        .compat();
 
     let byte_hex_table: Vec<String> = (0u8..=u8::max_value())
         .map(|i| {
             let byte_hex = format!("{:02x} ", i);
             Byte(i).color().paint(byte_hex).to_string()
         })
-    .collect();
+        .collect();
 
     while let Some(socket_result) = socket_rx.next().await {
         match socket_result {
@@ -115,14 +117,19 @@ async fn main() -> std::io::Result<()> {
                     write!(buffer, "{}", COLOR_CAN_SFF.paint("SFF ")).unwrap();
                 }
 
-                write!(buffer, "{}", COLOR_CAN_ID.paint(format!("{:08x} ", frame.id()))).unwrap();
+                write!(
+                    buffer,
+                    "{}",
+                    COLOR_CAN_ID.paint(format!("{:08x} ", frame.id()))
+                )
+                .unwrap();
 
                 for b in frame.data() {
                     write!(buffer, "{}", byte_hex_table[*b as usize]).unwrap();
                 }
 
                 println!("{}", buffer);
-            },
+            }
             Err(err) => {
                 eprintln!("IO error: {}", err);
             }

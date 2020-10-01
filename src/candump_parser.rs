@@ -1,5 +1,4 @@
-
-use nom::character::complete::{hex_digit1, digit1, space0, alphanumeric1};
+use nom::character::complete::{alphanumeric1, digit1, hex_digit1, space0};
 
 #[cfg(test)]
 mod tests {
@@ -8,14 +7,20 @@ mod tests {
     #[test]
     fn it_works() {
         let exp = DumpEntry {
-            timestamp: Timestamp { seconds: 1547046014, nanos: 597158 },
+            timestamp: Timestamp {
+                seconds: 1547046014,
+                nanos: 597158,
+            },
             can_interface: "vcan0".to_string(),
             can_frame: CanFrame {
                 frame_id: 123,
                 frame_body: 455,
-            }
+            },
         };
-       assert_eq!(dump_entry("(1547046014.597158) vcan0 7B#1C7"), Ok(("", exp)));
+        assert_eq!(
+            dump_entry("(1547046014.597158) vcan0 7B#1C7"),
+            Ok(("", exp))
+        );
     }
 }
 
