@@ -66,3 +66,44 @@ OPTIONS:
 ARGS:
     <CAN_INTERFACE>    Only generate messages for the given receiver (receiving node)
 ```
+# Canstatsrb
+
+A tool that collects statistics about received frames and the messages by message id.
+
+## Interface
+```
+canstatsrb 1.0.0
+SocketCAN message statistics
+
+USAGE:
+    canstatsrb <can-interface>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    <can-interface>    socketcan CAN interface e.g. vcan0
+```
+
+## Output Example
+```
+RX Total: 6410
+EFF Total: 3697	ERR: 0	RTR: 0
+SFF Total: 2713	ERR: 0	RTR: 0
+Messages by CAN ID
+    32     → #  107
+   113     → #  93
+   152     → #  95
+   161     → #  99
+   163     → #  95
+   290     → #  115
+   341     → #  85
+   367     → #  83
+   383     → #  104
+   489     → #  92
+   504     → #  94
+   548     → #  107
+   549     → #  111
+   626     → #  88
+```
