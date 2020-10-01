@@ -25,6 +25,10 @@ anyhow = "1.0"
 can-dbc = "3.0"
 futures = { version = "0.3", features = ["compat"] }
 futures-util = { version = "0.3", features = ["compat"] }
+futures-timer = "3.0"
+pretty-hex = "0.2"
+rand = "0.7"
+rand_core = "0.5"
 structopt = "0.3"
 socketcan = "1.7"
 tokio = { version = "0.2", features = ["full"] }
@@ -32,6 +36,9 @@ tokio-socketcan = "0.1"
 
 [[example]]
 name = "candumprb"
+
+[[example]]
+name = "cangenrb"
 
 [profile.release]
 opt-level = 3
