@@ -5,7 +5,7 @@
 # Binary Installation
 
 ```
-cargo install --examples canutils
+cargo install --bin candumprb
 ```
 
 # Candumprb
