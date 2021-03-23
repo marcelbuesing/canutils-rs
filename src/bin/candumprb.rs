@@ -1,8 +1,7 @@
 use ansi_term::Color::{self, Cyan, Fixed, Green, Purple};
 use anyhow::Result;
 use can_dbc::{ByteOrder, Signal};
-use futures::prelude::*;
-use futures_util::compat::Stream01CompatExt;
+use futures::StreamExt;
 use socketcan::CANFrame;
 use std::collections::HashMap;
 use std::convert::TryInto;
@@ -98,9 +97,7 @@ struct Opt {
 async fn main() -> Result<()> {
     let opt = Opt::from_args();
 
-    let mut socket_rx = tokio_socketcan::CANSocket::open(&opt.can_interface)
-        .unwrap()
-        .compat();
+    let mut socket_rx = tokio_socketcan::CANSocket::open(&opt.can_interface).unwrap();
 
     let byte_hex_table: Vec<String> = (0u8..=u8::max_value())
         .map(|i| {

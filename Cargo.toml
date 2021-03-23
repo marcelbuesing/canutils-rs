@@ -15,27 +15,24 @@ readme = "README.md"
 travis-ci = { repository = "marcelbuesing/canutils-rs", branch = "master" }
 
 [dependencies]
-nom = "5.1"
-serde = { version = "1.0", optional = true }
-serde_derive = { version = "1.0", optional = true }
-
-[dev-dependencies]
 ansi_term = "0.12"
 anyhow = "1.0"
 can-dbc = "3.0"
-futures = { version = "0.3", features = ["compat"] }
-futures-util = { version = "0.3", features = ["compat"] }
-futures-timer = "3.0"
+futures = "0.3"
 pretty-hex = "0.2"
+nom = "5.1"
 rand = "0.7"
 rand_core = "0.5"
+serde = { version = "1.0", optional = true }
+serde_derive = { version = "1.0", optional = true }
 structopt = "0.3"
 socketcan = "1.7"
-tokio = { version = "0.2", features = ["full"] }
-tokio-socketcan = "0.1"
+tokio = { version = "1.4", features = ["full"] }
+tokio-socketcan = "0.3"
 
 [[bin]]
 name = "candumprb"
+path = "src/bin/candumprb.rs"
 
 [[bin]]
 name = "cangenrb"

@@ -3,8 +3,6 @@ use ansi_term::{
     Colour::{Blue, Cyan, Green, Purple},
 };
 use can_dbc::{self, Message};
-use futures_timer::Delay;
-use futures_util::compat::Future01CompatExt;
 use pretty_hex::*;
 use rand::Rng;
 use socketcan;
@@ -12,9 +10,10 @@ use std::{
     fs::File,
     io::{self, prelude::*},
     path::PathBuf,
-    time::{Duration, Instant},
+    time::Instant,
 };
 use structopt::StructOpt;
+use tokio::time;
 use tokio_socketcan::CANFrame;
 
 #[derive(Debug, StructOpt)]
@@ -93,15 +92,16 @@ async fn main() -> io::Result<()> {
     let mut messages_sent_counter: u128 = 0;
 
     let now = Instant::now();
+    let mut interval = time::interval(time::Duration::from_micros(opt.frequency));
     loop {
-        Delay::new(Duration::from_micros(opt.frequency)).await;
+        interval.tick().await;
         let can_frame = if opt.random_frame_data {
             random_frame_data_gen.gen()
         } else {
             dbc_signal_range_gen.gen()
         };
 
-        socket_tx.write_frame(can_frame).compat().await?;
+        socket_tx.write_frame(can_frame).unwrap().await.unwrap();
 
         messages_sent_counter += 1;
 

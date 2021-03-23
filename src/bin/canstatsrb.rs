@@ -1,6 +1,5 @@
 use core::fmt::Display;
-use futures::prelude::*;
-use futures_util::compat::Stream01CompatExt;
+use futures::StreamExt;
 use std::{collections::HashMap, fmt};
 use structopt::StructOpt;
 use tokio_socketcan;
@@ -51,9 +50,7 @@ impl Display for Stats {
 async fn main() -> std::io::Result<()> {
     let opt = Opt::from_args();
 
-    let mut socket_rx = tokio_socketcan::CANSocket::open(&opt.can_interface)
-        .unwrap()
-        .compat();
+    let mut socket_rx = tokio_socketcan::CANSocket::open(&opt.can_interface).unwrap();
 
     let mut stats: Stats = Default::default();
 
