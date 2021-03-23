@@ -34,13 +34,13 @@ socketcan = "1.7"
 tokio = { version = "0.2", features = ["full"] }
 tokio-socketcan = "0.1"
 
-[[example]]
+[[bin]]
 name = "candumprb"
 
-[[example]]
+[[bin]]
 name = "cangenrb"
 
-[[example]]
+[[bin]]
 name = "canstatsrb"
 
 [profile.release]
